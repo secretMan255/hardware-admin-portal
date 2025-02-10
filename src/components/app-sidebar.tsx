@@ -1,29 +1,17 @@
 'use client'
 
 import * as React from 'react'
-import { AudioWaveform, BookOpen, Bot, Command, Frame, GalleryVerticalEnd, Map, PieChart, Settings2, SquareTerminal } from 'lucide-react'
+import { GalleryVerticalEnd, SquareTerminal } from 'lucide-react'
 
 import { NavMain } from '@/components/nav-main'
-import { NavUser } from '@/components/nav-user'
+import { NavFooter } from '@/components/nav-footer'
 import { NavHead } from '@/components/nav-header'
-import {
-     Sidebar,
-     SidebarContent,
-     SidebarFooter,
-     SidebarGroup,
-     SidebarGroupContent,
-     SidebarGroupLabel,
-     SidebarHeader,
-     SidebarMenu,
-     SidebarMenuButton,
-     SidebarMenuItem,
-     SidebarRail,
-} from '@/components/ui/sidebar'
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@/components/ui/sidebar'
 
 // This is sample data.
 const data = {
      footer: {
-          name: 'shadcn',
+          name: 'Logout',
      },
      teams: [
           {
@@ -58,7 +46,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <NavMain items={data.navMain}></NavMain>
                </SidebarContent>
                <SidebarFooter>
-                    <NavUser footer={data.footer.name} />
+                    <NavFooter footer={data.footer.name} />
                </SidebarFooter>
                <SidebarRail />
           </Sidebar>
