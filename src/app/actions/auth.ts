@@ -26,8 +26,10 @@ export async function signIn(formData: FormData): Promise<SignInResult | undefin
 
      // Mock authentication
      if (username === 'admin' && password === 'password') {
-          localStorage.setItem('authToken', 'mockToken')
-          return undefined // No errors
+          // Set the cookie
+          // document.cookie = `authToken=cookie; path=/; max-age=${60 * 60 * 24}; secure; SameSite=Strict`
+
+          return undefined
      }
 
      return {
