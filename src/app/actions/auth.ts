@@ -1,10 +1,16 @@
 import { SignIpFormSchema } from '../../lib/definitions'
+import { CallApi } from '@/axios/call-api'
 
 export interface SignInResult {
      errors?: {
           username?: string[]
           password?: string[]
      }
+}
+
+type SigninType = {
+     msg: string
+     status: number
 }
 
 export async function signIn(formData: FormData): Promise<SignInResult | undefined> {
@@ -22,17 +28,11 @@ export async function signIn(formData: FormData): Promise<SignInResult | undefin
      }
 
      // Process data (e.g., authenticate the user)
-     const { username, password } = validatedFields.data
+     const res: SigninType = await CallApi.login(validatedFields.data)
 
-     // Mock authentication
-     if (username === 'admin' && password === 'password') {
-          // Set the cookie
-          // document.cookie = `authToken=cookie; path=/; max-age=${60 * 60 * 24}; secure; SameSite=Strict`
-
-          return undefined
+     if (res.status !== 0) {
+          return { errors: { username: ['Invalid username or password'] } }
      }
 
-     return {
-          errors: { username: ['Invalid username or password'] },
-     }
+     return undefined
 }
