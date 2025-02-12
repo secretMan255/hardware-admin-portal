@@ -25,8 +25,17 @@ export class CallApi {
                const response = await AxiosClient.getInstance().post('/v1/login', data)
                return response.data
           } catch (err) {
-               console.log('err: ', err)
+               console.log('login err: ', err)
                return { err: 'Invalid credential' }
+          }
+     }
+
+     public static async logout() {
+          try {
+               await AxiosClient.getInstance().post('v1/logout')
+          } catch (err) {
+               console.log('logout err: ', err)
+               return { err: 'Logout failed' }
           }
      }
 }

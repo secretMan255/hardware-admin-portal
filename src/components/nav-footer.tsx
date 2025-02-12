@@ -1,15 +1,13 @@
 'use client'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
 import { useRouter } from 'next/navigation'
+import { CallApi } from '@/axios/call-api'
 
 export function NavFooter({ footer }: { footer: string }) {
      const router = useRouter()
 
-     function removeCookie() {
-          if (typeof document !== 'undefined') {
-               // Ensure the code runs client-side
-               document.cookie = 'authToken=; Max-Age=0; path=/'
-          }
+     async function removeCookie() {
+          await CallApi.logout()
 
           router.push('/login')
      }
