@@ -1,6 +1,8 @@
 'use client'
 
 import * as React from 'react'
+import { useMediaQuery } from '@/lib/use-media-query'
+import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { GalleryVerticalEnd, SquareTerminal } from 'lucide-react'
 
 import { NavMain } from '@/components/nav-main'
@@ -37,6 +39,30 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+     const isMobile = useMediaQuery('(max-width: 900px)')
+     const [open, setOpen] = React.useState(false)
+
+     if (isMobile) {
+          return (
+               <Sheet open={open} onOpenChange={setOpen}>
+                    <SheetTrigger asChild>
+                         <button onClick={() => setOpen(true)} className="fixed top-4 left-4 z-50 text-black p-2 rounded-md">
+                              ☰
+                         </button>
+                    </SheetTrigger>
+                    {/* ✅ Fix: Add SheetTitle for accessibility */}
+                    <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar">
+                         <SheetTitle></SheetTitle>
+                         <SheetDescription></SheetDescription>
+
+                         <NavHead teams={data.teams} />
+                         <NavMain items={data.navMain} />
+                         <NavFooter footer={data.footer.name} />
+                    </SheetContent>
+               </Sheet>
+          )
+     }
+
      return (
           <Sidebar collapsible="icon" {...props}>
                <SidebarHeader>
