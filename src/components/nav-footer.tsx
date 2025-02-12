@@ -1,7 +1,7 @@
 'use client'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
 import { useRouter } from 'next/navigation'
-import { CallApi } from '@/axios/call-api'
+import { CallApi } from '@/lib/axios/call-api'
 
 export function NavFooter({ footer }: { footer: string }) {
      const router = useRouter()

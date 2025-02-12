@@ -1,5 +1,5 @@
 import { SignIpFormSchema } from '../../lib/definitions'
-import { CallApi } from '@/axios/call-api'
+import { CallApi } from '@/lib/axios/call-api'
 
 export interface SignInResult {
      errors?: {
