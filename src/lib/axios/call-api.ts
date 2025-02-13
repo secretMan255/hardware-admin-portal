@@ -1,9 +1,21 @@
+import { AxiosResponse } from 'axios'
 import { AxiosClient } from './axios-api'
 
 type LoginType = {
      username: string
      password: string
      role?: string
+}
+
+export type ProductsType = {
+     id: number
+     name: string
+     parentId: string
+     icon: string
+     describe: string
+     status: number
+     createTime: string
+     err?: string
 }
 
 export class CallApi {
@@ -36,6 +48,16 @@ export class CallApi {
           } catch (err) {
                console.log('logout err: ', err)
                return { err: 'Logout failed' }
+          }
+     }
+
+     public static async getProducts(): Promise<ProductsType[]> {
+          try {
+               const response: AxiosResponse<ProductsType[]> = await AxiosClient.getInstance().get('v1/products')
+               return response.data
+          } catch (err) {
+               console.error('Get products list failed:', err)
+               return []
           }
      }
 }

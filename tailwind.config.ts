@@ -46,6 +46,16 @@ export default {
                          '4': 'hsl(var(--chart-4))',
                          '5': 'hsl(var(--chart-5))',
                     },
+                    sidebar: {
+                         DEFAULT: 'hsl(var(--sidebar-background))',
+                         foreground: 'hsl(var(--sidebar-foreground))',
+                         primary: 'hsl(var(--sidebar-primary))',
+                         'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+                         accent: 'hsl(var(--sidebar-accent))',
+                         'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+                         border: 'hsl(var(--sidebar-border))',
+                         ring: 'hsl(var(--sidebar-ring))',
+                    },
                },
                borderRadius: {
                     lg: 'var(--radius)',
@@ -54,15 +64,5 @@ export default {
                },
           },
      },
-     plugins: [require('tailwindcss-animate'), require('daisyui')],
-     daisyui: {
-          themes: ['dark', 'light'], // Enable light and dark themes
-          base: true, // Add base styles
-          styled: true, // Enable styled components
-          utils: true, // Enable utility classes
-          logs: true, // Enable DaisyUI logs in the console
-          rtl: false, // Disable right-to-left support
-          prefix: '', // No prefix for classes
-          darkTheme: 'dark', // Set dark theme as default for dark mode
-     },
+     plugins: [require('tailwindcss-animate')],
 } satisfies Config
