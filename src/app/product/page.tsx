@@ -2,66 +2,165 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { DateRangePicker } from '@/components/date-picker'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Dialog, DialogContent, DialogTitle, DialogTrigger, DialogHeader, DialogFooter } from '@/components/ui/dialog'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
+import { convertStatus, convertUtcToLocal } from '@/lib/utils'
+import { CallApi, ProductsType } from '@/lib/axios/call-api'
+import React from 'react'
 
 export default function Product() {
-     const [searchValue, setSearchValue] = useState('')
+     // get products
+     const [productList, setProductList] = useState<ProductsType[]>([])
+     const [loading, setLoading] = useState<boolean>(true)
+     const [error, setError] = useState<string | null>(null)
+
+     // filter
+     const [filteredProducts, setFilteredProducts] = useState<ProductsType[]>([])
+     const [searchProductByName, setsearchProductByName] = useState('')
      const [productStatus, setProductStatus] = useState('2')
      const [parentId, setParentId] = useState('')
-     const [startDate, setStartDate] = useState<Date>()
-     const [endDate, setEndDate] = useState<Date>()
-     const parentIdFromApi = [1, 2, 3, 4, 5]
+     const [startDate, setStartDate] = useState<Date | null>(null)
+     const [endDate, setEndDate] = useState<Date | null>(null)
+     const [selectedRows, setSelectedRows] = useState<number[]>([])
+     const [selectAll, setSelectAll] = useState(false)
 
-     const productList = [
-          {
-               id: 1,
-               name: `product name`,
-               parentId: 0,
-               icon: 'icon name',
-               describe: 'Product description goes here',
-               status: '1: Active, 0: deactive',
-               createTime: new Date(Date.now() - Math.floor(Math.random() * 10000000000)).toISOString(),
-          },
-          {
-               id: 2,
-               name: `product name2`,
-               parentId: 0,
-               icon: 'icon name2',
-               describe: 'Product description goes here',
-               status: '1: Active, 0: deactive',
-               createTime: new Date(Date.now() - Math.floor(Math.random() * 10000000000)).toISOString(),
-          },
-     ]
+     // sort table by header
+     const [sortColumn, setSortColumn] = useState<string | null>(null)
+     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
+
+     useEffect(() => {
+          async function fetchProducts() {
+               try {
+                    const response = await CallApi.getProducts()
+                    setProductList(response)
+               } catch (err) {
+                    setError('Failed to get products')
+               } finally {
+                    setLoading(false)
+               }
+          }
+          fetchProducts()
+     }, [])
+
+     useEffect(() => {
+          setFilteredProducts(productList)
+     }, [productList])
+
+     function sortProducts(column: keyof ProductsType) {
+          let sortedProducts = [...filteredProducts]
+
+          sortedProducts.sort((a, b) => {
+               let valueA: string | number = a[column] ?? ''
+               let valueB: string | number = b[column] ?? ''
+
+               // Convert to lowercase for case-insensitive sorting (for name, status, etc.)
+               if (typeof valueA === 'string' && typeof valueB === 'string') {
+                    valueA = valueA.toLowerCase()
+                    valueB = valueB.toLowerCase()
+               }
+
+               if (column === 'parentId' || column === 'status') {
+                    valueA = Number(valueA)
+                    valueB = Number(valueB)
+               }
+
+               // Convert date strings to Date objects for sorting
+               if (column === 'createTime') {
+                    valueA = new Date(a.createTime).getTime()
+                    valueB = new Date(b.createTime).getTime()
+               }
+
+               if (sortOrder === 'asc') {
+                    return valueA > valueB ? 1 : -1
+               } else {
+                    return valueA < valueB ? 1 : -1
+               }
+          })
+
+          // Toggle sort order
+          setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+          setSortColumn(column)
+          setFilteredProducts(sortedProducts)
+     }
+
+     // select all row
+     const handleSelectAll = () => {
+          if (selectAll) {
+               setSelectedRows([])
+          } else {
+               setSelectedRows(filteredProducts.map((item) => item.id))
+          }
+          setSelectAll(!selectAll)
+     }
+
+     // select single row
+     const handleRowSelect = (id: number) => {
+          setSelectedRows((prevSelected) => (prevSelected.includes(id) ? prevSelected.filter((rowId) => rowId !== id) : [...prevSelected, id]))
+     }
+
+     // get parentId
+     const parentIdList = [...new Set(filteredProducts.map((product) => product.parentId).filter((id) => id !== null && id !== undefined && id !== ''))]
 
      // pagination
      const [currentPage, setCurrentPage] = useState(1)
      const itemsPerPage = 10
-     const totalPages = Math.ceil(productList.length / itemsPerPage)
+     const totalPages = Math.ceil(filteredProducts.length / itemsPerPage)
      const indexOfLastItem = currentPage * itemsPerPage
      const indexOfFirstItem = indexOfLastItem - itemsPerPage
-     const currentItems = productList.slice(indexOfFirstItem, indexOfLastItem)
+     const currentItems = filteredProducts.slice(indexOfFirstItem, indexOfLastItem)
 
-     function searchProduct() {}
+     function searchProduct() {
+          setCurrentPage(1)
+          let filtered = productList
+
+          if (searchProductByName.trim() !== '') {
+               filtered = filtered.filter((product) => product.name.toLowerCase().includes(searchProductByName.toLowerCase()))
+          }
+
+          if (productStatus !== '2') {
+               filtered = filtered.filter((product) => String(product.status) === productStatus)
+          }
+
+          if (parentId.trim() !== '' && parentId.trim() !== 'Parent Id') {
+               filtered = filtered.filter((product) => product.parentId.toString() === parentId)
+          }
+
+          if (startDate && endDate) {
+               filtered = filtered.filter((product) => {
+                    const productDate = new Date(convertUtcToLocal(product.createTime))
+                    const adjustedEndDate = new Date(endDate)
+                    adjustedEndDate.setHours(23, 59, 59, 999)
+
+                    return productDate >= startDate && productDate <= adjustedEndDate
+               })
+          }
+
+          setFilteredProducts(filtered)
+     }
      function clearFilter() {
-          setSearchValue('')
+          setCurrentPage(1)
+          setsearchProductByName('')
           setProductStatus('2')
           setParentId('')
-          setStartDate(undefined)
-          setEndDate(undefined)
+          setStartDate(null)
+          setEndDate(null)
+          setFilteredProducts(productList)
      }
 
      return (
           <div className="w-full p-4 space-y-4 select-none">
                {/* Search product */}
                <div className="flex gap-2">
-                    <Input className="flex-1" placeholder="Search product ..." value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
+                    <Input className="flex-1" placeholder="Search product ..." value={searchProductByName} onChange={(e) => setsearchProductByName(e.target.value)} />
                     <Button variant="outline" onClick={searchProduct}>
                          Search
+                    </Button>
+                    <Button variant="outline" onClick={clearFilter}>
+                         RESET FILTER
                     </Button>
                </div>
 
@@ -82,18 +181,18 @@ export default function Product() {
                          <DateRangePicker
                               startDate={startDate || null}
                               endDate={endDate || null}
-                              onStartDateChange={(date) => setStartDate(date ?? new Date())}
-                              onEndDateChange={(date) => setEndDate(date ?? new Date())}
+                              onStartDateChange={(date) => setStartDate(date ?? null)}
+                              onEndDateChange={(date) => setEndDate(date ?? null)}
                          />
 
                          <Select onValueChange={setParentId}>
                               <SelectTrigger className="w-[200px]">
-                                   <SelectValue placeholder="Parent ID"></SelectValue>
+                                   <SelectValue placeholder="Parent ID">{parentId ? parentId : 'Parent ID'}</SelectValue>
                               </SelectTrigger>
                               <SelectContent>
-                                   {parentIdFromApi.map((id) => (
-                                        <SelectItem key={id} value={id.toString()}>
-                                             {id}
+                                   {parentIdList.map((id) => (
+                                        <SelectItem key={id} value={id.toString() || '0'}>
+                                             {id.toString()}
                                         </SelectItem>
                                    ))}
                               </SelectContent>
@@ -107,9 +206,6 @@ export default function Product() {
                     <Button variant="outline">DELETE</Button>
                     <Button variant="outline">ACTIVE</Button>
                     <Button variant="outline">DEACTIVE</Button>
-                    <Button variant="outline" onClick={clearFilter}>
-                         RESET FILTER
-                    </Button>
                </div>
 
                {/* Table */}
@@ -117,25 +213,25 @@ export default function Product() {
                     <Table>
                          <TableHeader>
                               <TableRow>
-                                   <TableHead>ID</TableHead>
-                                   <TableHead>Prodcut Name</TableHead>
-                                   <TableHead>Parent ID</TableHead>
+                                   <TableHead onClick={() => sortProducts('id')}>ID</TableHead>
+                                   <TableHead onClick={() => sortProducts('name')}>Prodcut Name</TableHead>
+                                   <TableHead onClick={() => sortProducts('parentId')}>Parent ID {sortColumn === 'parentId' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</TableHead>
                                    <TableHead>Icon</TableHead>
                                    <TableHead>Describe</TableHead>
-                                   <TableHead>Status</TableHead>
-                                   <TableHead>Create At</TableHead>
+                                   <TableHead onClick={() => sortProducts('status')}>Status {sortColumn === 'status' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</TableHead>
+                                   <TableHead onClick={() => sortProducts('createTime')}>Create At {sortColumn === 'createTime' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</TableHead>
                                    <TableHead>Actions</TableHead>
                                    <TableHead>
-                                        <Checkbox />
+                                        <Checkbox checked={selectAll} onCheckedChange={handleSelectAll} />
                                    </TableHead>
                               </TableRow>
                          </TableHeader>
                          <TableBody>
                               {currentItems.map((item) => (
-                                   <TableRow>
+                                   <TableRow key={item.id}>
                                         <TableCell>{item.id}</TableCell>
                                         <TableCell>{item.name}</TableCell>
-                                        <TableCell>{item.parentId}</TableCell>
+                                        <TableCell>{Number(item.parentId)}</TableCell>
                                         <TableCell>{item.icon}</TableCell>
                                         <TableCell>
                                              <Dialog>
@@ -151,8 +247,8 @@ export default function Product() {
                                                   </DialogContent>
                                              </Dialog>
                                         </TableCell>
-                                        <TableCell>{item.status}</TableCell>
-                                        <TableCell>{item.createTime}</TableCell>
+                                        <TableCell>{convertStatus(Number(item.status))}</TableCell>
+                                        <TableCell>{convertUtcToLocal(item.createTime)}</TableCell>
                                         <TableCell>
                                              <Dialog>
                                                   <DialogTrigger asChild>
@@ -185,7 +281,7 @@ export default function Product() {
                                              </Dialog>
                                         </TableCell>
                                         <TableCell>
-                                             <Checkbox />
+                                             <Checkbox checked={selectedRows.includes(item.id)} onCheckedChange={() => handleRowSelect(item.id)} />
                                         </TableCell>
                                    </TableRow>
                               ))}
@@ -211,14 +307,14 @@ export default function Product() {
                                    return false
                               })
                               .map((page, index, filteredPages) => (
-                                   <>
-                                        {/* Add ellipsis if needed */}
+                                   <React.Fragment key={page}>
+                                        {/* Add ellipsis if there's a skipped page */}
                                         {index > 0 && page !== filteredPages[index - 1] + 1 && <span key={`ellipsis-${page}`}>...</span>}
 
-                                        <Button key={page} variant={currentPage === page ? 'default' : 'outline'} size="sm" onClick={() => setCurrentPage(page)}>
+                                        <Button key={`page-${page}`} variant={currentPage === page ? 'default' : 'outline'} size="sm" onClick={() => setCurrentPage(page)}>
                                              {page}
                                         </Button>
-                                   </>
+                                   </React.Fragment>
                               ))}
                     </div>
 
