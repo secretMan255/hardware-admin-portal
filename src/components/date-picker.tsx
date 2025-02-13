@@ -14,7 +14,7 @@ type DateRangePickerType = {
 
 export const DateRangePicker: React.FC<DateRangePickerType> = ({ startDate, endDate, onStartDateChange, onEndDateChange }) => {
      return (
-          <div className="flex items-centr gap-2">
+          <div className="flex items-center gap-2">
                <Popover>
                     <PopoverTrigger asChild>
                          <Button variant="outline" className="w-[200px] justify-start text-left font-normal">
@@ -22,8 +22,8 @@ export const DateRangePicker: React.FC<DateRangePickerType> = ({ startDate, endD
                               {startDate ? format(startDate, 'dd-MM-yyyy') : 'Start date'}
                          </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                         <Calendar mode="single" selected={startDate ?? new Date()} onSelect={(date) => onStartDateChange(date ?? new Date())} initialFocus></Calendar>
+                    <PopoverContent className="w-auto p-0 z-50 bg-white shadow-lg border border-gray-300 rounded-md" align="start">
+                         <Calendar mode="single" selected={startDate || undefined} onSelect={(date) => onStartDateChange(date ?? null)} initialFocus />
                     </PopoverContent>
                </Popover>
                <span className="pt-2">to</span>
@@ -34,8 +34,8 @@ export const DateRangePicker: React.FC<DateRangePickerType> = ({ startDate, endD
                               {endDate ? format(endDate, 'dd-MM-yyyy') : 'End date'}
                          </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                         <Calendar mode="single" selected={endDate ?? new Date()} onSelect={(date) => onEndDateChange(date ?? new Date())} initialFocus />
+                    <PopoverContent className="w-auto p-0 z-50 bg-white shadow-lg border border-gray-300 rounded-md" align="start">
+                         <Calendar mode="single" selected={endDate || undefined} onSelect={(date) => onEndDateChange(date ?? null)} initialFocus />
                     </PopoverContent>
                </Popover>
           </div>
