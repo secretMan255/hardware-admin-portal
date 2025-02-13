@@ -63,7 +63,7 @@ export default function Product() {
                     valueB = valueB.toLowerCase()
                }
 
-               if (column === 'parentId' || column === 'status') {
+               if (column === 'parentId' || column === 'status' || column === 'id') {
                     valueA = Number(valueA)
                     valueB = Number(valueB)
                }
@@ -213,8 +213,8 @@ export default function Product() {
                     <Table>
                          <TableHeader>
                               <TableRow>
-                                   <TableHead onClick={() => sortProducts('id')}>ID</TableHead>
-                                   <TableHead onClick={() => sortProducts('name')}>Prodcut Name</TableHead>
+                                   <TableHead onClick={() => sortProducts('id')}>ID {sortColumn === 'id' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</TableHead>
+                                   <TableHead onClick={() => sortProducts('name')}>Prodcut Name {sortColumn === 'name' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</TableHead>
                                    <TableHead onClick={() => sortProducts('parentId')}>Parent ID {sortColumn === 'parentId' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</TableHead>
                                    <TableHead>Icon</TableHead>
                                    <TableHead>Describe</TableHead>
