@@ -60,4 +60,12 @@ export class CallApi {
                return []
           }
      }
+
+     public static async updateProductDescribe(productId: number, data: string[]) {
+          try {
+               return await AxiosClient.getInstance().post('v1/update/product/describe', { productId: productId, describe: JSON.stringify(data) })
+          } catch (err) {
+               return err
+          }
+     }
 }
