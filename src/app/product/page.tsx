@@ -5,12 +5,12 @@ import { Input } from '@/components/ui/input'
 import { useState, useEffect } from 'react'
 import { DateRangePicker } from '@/components/date-picker'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Dialog, DialogContent, DialogTitle, DialogTrigger, DialogHeader, DialogFooter } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogTitle, DialogTrigger, DialogHeader, DialogFooter, DialogDescription } from '@/components/ui/dialog'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Label } from '@/components/ui/label'
 import { convertStatus, convertUtcToLocal } from '@/lib/utils'
 import { CallApi, ProductsType } from '@/lib/axios/call-api'
 import React from 'react'
+import { DescribeDialog } from '@/components/describe-dialog'
 
 export default function Product() {
      // get products
@@ -50,6 +50,12 @@ export default function Product() {
           setFilteredProducts(productList)
      }, [productList])
 
+     // update productList from describe-dialog component
+     const handleUpdateDescribe = (productId: number, newDescribe: string[]) => {
+          setProductList((prevList) => prevList.map((product) => (product.id === productId ? { ...product, describe: JSON.stringify(newDescribe) } : product)))
+     }
+
+     // sort
      function sortProducts(column: keyof ProductsType) {
           let sortedProducts = [...filteredProducts]
 
@@ -113,6 +119,7 @@ export default function Product() {
      const indexOfFirstItem = indexOfLastItem - itemsPerPage
      const currentItems = filteredProducts.slice(indexOfFirstItem, indexOfLastItem)
 
+     // search product
      function searchProduct() {
           setCurrentPage(1)
           let filtered = productList
@@ -141,6 +148,7 @@ export default function Product() {
 
           setFilteredProducts(filtered)
      }
+     // reset filter
      function clearFilter() {
           setCurrentPage(1)
           setsearchProductByName('')
@@ -220,9 +228,9 @@ export default function Product() {
                                    <TableHead>Describe</TableHead>
                                    <TableHead onClick={() => sortProducts('status')}>Status {sortColumn === 'status' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</TableHead>
                                    <TableHead onClick={() => sortProducts('createTime')}>Create At {sortColumn === 'createTime' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</TableHead>
-                                   <TableHead>Actions</TableHead>
+                                   <TableHead></TableHead>
                                    <TableHead>
-                                        <Checkbox checked={selectAll} onCheckedChange={handleSelectAll} />
+                                        <Checkbox checked={selectAll} onCheckedChange={handleSelectAll}></Checkbox>
                                    </TableHead>
                               </TableRow>
                          </TableHeader>
@@ -233,22 +241,13 @@ export default function Product() {
                                         <TableCell>{item.name}</TableCell>
                                         <TableCell>{Number(item.parentId)}</TableCell>
                                         <TableCell>{item.icon}</TableCell>
+                                        {/* edit describe */}
                                         <TableCell>
-                                             <Dialog>
-                                                  <DialogTrigger asChild>
-                                                       <Button variant="outline" size="sm">
-                                                            EDIT DESCRIBE
-                                                       </Button>
-                                                  </DialogTrigger>
-                                                  <DialogContent>
-                                                       <DialogHeader>
-                                                            <DialogTitle>Description</DialogTitle>
-                                                       </DialogHeader>
-                                                  </DialogContent>
-                                             </Dialog>
+                                             <DescribeDialog describe={item.describe} productId={item.id} onUpdateDescribe={handleUpdateDescribe} />
                                         </TableCell>
                                         <TableCell>{convertStatus(Number(item.status))}</TableCell>
                                         <TableCell>{convertUtcToLocal(item.createTime)}</TableCell>
+                                        {/* edit item */}
                                         <TableCell>
                                              <Dialog>
                                                   <DialogTrigger asChild>
@@ -259,21 +258,9 @@ export default function Product() {
                                                   <DialogContent>
                                                        <DialogHeader>
                                                             <DialogTitle>Edit Product</DialogTitle>
+                                                            <DialogDescription id="dialog-description">Modify product details below.</DialogDescription>
                                                        </DialogHeader>
-                                                       {/* <div className="grid gap-4 py-4">
-                                                       <div className="grid grid-cols-4 items-center gap-4">
-                                                            <Label htmlFor="name" className="text-right">
-                                                                 Name
-                                                            </Label>
-                                                            <Input id="name" value="Pedro Duarte" className="col-span-3" />
-                                                       </div>
-                                                       <div className="grid grid-cols-4 items-center gap-4">
-                                                            <Label htmlFor="username" className="text-right">
-                                                                 Username
-                                                            </Label>
-                                                            <Input id="username" value="@peduarte" className="col-span-3" />
-                                                       </div>
-                                                  </div> */}
+
                                                        <DialogFooter>
                                                             <Button type="submit">Save changes</Button>
                                                        </DialogFooter>
