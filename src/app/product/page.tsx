@@ -11,6 +11,14 @@ import { convertStatus, convertUtcToLocal } from '@/lib/utils'
 import { CallApi, ProductsType } from '@/lib/axios/call-api'
 import React from 'react'
 import { DescribeDialog } from '@/components/describe-dialog'
+import { EditItemDialog } from '@/components/edit-item-dialog'
+import { AddProductDialog } from '@/components/add-product'
+import { UpdateParentId } from '@/components/update-product-parentId'
+
+enum ProductStatus {
+     ACTIVE = 1,
+     DEACTIVE = 0,
+}
 
 export default function Product() {
      // get products
@@ -53,6 +61,21 @@ export default function Product() {
      // update productList from describe-dialog component
      const handleUpdateDescribe = (productId: number, newDescribe: string[]) => {
           setProductList((prevList) => prevList.map((product) => (product.id === productId ? { ...product, describe: JSON.stringify(newDescribe) } : product)))
+     }
+
+     // update productList from edit-item-dialog component
+     const handleUpdateEditItem = (productId: number, productName: string, parentId: string, icon: string) => {
+          setProductList((prevList) => prevList.map((product) => (product.id === productId ? { ...product, name: productName, parentId, icon } : product)))
+     }
+
+     // update productList from add-product component
+     const handleUpdateProduct = (productId: number, productName: string, parentId: string, icon: string, describe: string) => {
+          setProductList((prevList) => [...prevList, { id: productId, name: productName, parentId, icon, describe, status: 1, createTime: new Date().toISOString() }])
+     }
+
+     // update product parent id from update-product-parentId component
+     const handleUpdateProductParentId = (originalParentId: string, newParentId: string) => {
+          setProductList((prevList) => prevList.map((product) => (Number(product.parentId) === Number(originalParentId) ? { ...product, parentId: newParentId } : product)))
      }
 
      // sort
@@ -113,7 +136,7 @@ export default function Product() {
 
      // pagination
      const [currentPage, setCurrentPage] = useState(1)
-     const itemsPerPage = 10
+     const itemsPerPage = 15
      const totalPages = Math.ceil(filteredProducts.length / itemsPerPage)
      const indexOfLastItem = currentPage * itemsPerPage
      const indexOfFirstItem = indexOfLastItem - itemsPerPage
@@ -157,6 +180,30 @@ export default function Product() {
           setStartDate(null)
           setEndDate(null)
           setFilteredProducts(productList)
+     }
+
+     // update product status
+     async function updateProductStatus(status: number) {
+          try {
+               if (selectedRows.length === 0) return
+               await CallApi.updateProductStatus(selectedRows, status)
+
+               setProductList((prevList) => prevList.map((product) => (selectedRows.includes(product.id) ? { ...product, status } : product)))
+
+               setSelectedRows([])
+          } catch (err) {}
+     }
+
+     // delete product and update item to deactivate
+     async function deleteProduct() {
+          try {
+               if (selectedRows.length === 0) return
+               await CallApi.deleteProduct(selectedRows)
+
+               setProductList((prevList) => prevList.filter((product) => !selectedRows.includes(product.id)))
+
+               setSelectedRows([])
+          } catch (err) {}
      }
 
      return (
@@ -209,11 +256,54 @@ export default function Product() {
                </div>
 
                {/* Edit product */}
-               <div className="flex gap-2">
-                    <Button variant="outline">ADD</Button>
-                    <Button variant="outline">DELETE</Button>
-                    <Button variant="outline">ACTIVE</Button>
-                    <Button variant="outline">DEACTIVE</Button>
+               <div className="flex  justify-between items-center py-4">
+                    <div className="flex gap-2">
+                         {/* <Button variant="outline">ADD</Button> */}
+                         <AddProductDialog productNames={productList.map((product) => product.name)} onAddProduct={handleUpdateProduct} />
+                         <Button variant="outline" onClick={() => deleteProduct()}>
+                              DELETE
+                         </Button>
+                         <Button variant="outline" onClick={() => updateProductStatus(ProductStatus.ACTIVE)}>
+                              ACTIVE
+                         </Button>
+                         <Button variant="outline" onClick={() => updateProductStatus(ProductStatus.DEACTIVE)}>
+                              DEACTIVE
+                         </Button>
+                         <UpdateParentId onUpdateParentId={handleUpdateProductParentId} />
+                    </div>
+                    {/* Pagination */}
+                    <div className="flex items-center gap-2">
+                         <Button variant="outline" size="sm" onClick={() => setCurrentPage((old) => Math.max(old - 1, 1))} disabled={currentPage === 1}>
+                              Previous
+                         </Button>
+
+                         <div className="flex items-center gap-1">
+                              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                                   .filter((page) => {
+                                        // Always show the first and last page
+                                        if (page === 1 || page === totalPages) return true
+
+                                        // Show pages dynamically around the current page
+                                        if (page >= currentPage - 2 && page <= currentPage + 2) return true
+
+                                        return false
+                                   })
+                                   .map((page, index, filteredPages) => (
+                                        <React.Fragment key={page}>
+                                             {/* Add ellipsis if there's a skipped page */}
+                                             {index > 0 && page !== filteredPages[index - 1] + 1 && <span key={`ellipsis-${page}`}>...</span>}
+
+                                             <Button key={`page-${page}`} variant={currentPage === page ? 'default' : 'outline'} size="sm" onClick={() => setCurrentPage(page)}>
+                                                  {page}
+                                             </Button>
+                                        </React.Fragment>
+                                   ))}
+                         </div>
+
+                         <Button variant="outline" size="sm" onClick={() => setCurrentPage((old) => Math.min(old + 1, totalPages))} disabled={currentPage === totalPages}>
+                              Next
+                         </Button>
+                    </div>
                </div>
 
                {/* Table */}
@@ -225,10 +315,10 @@ export default function Product() {
                                    <TableHead onClick={() => sortProducts('name')}>Prodcut Name {sortColumn === 'name' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</TableHead>
                                    <TableHead onClick={() => sortProducts('parentId')}>Parent ID {sortColumn === 'parentId' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</TableHead>
                                    <TableHead>Icon</TableHead>
-                                   <TableHead>Describe</TableHead>
+                                   <TableHead>Description</TableHead>
                                    <TableHead onClick={() => sortProducts('status')}>Status {sortColumn === 'status' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</TableHead>
                                    <TableHead onClick={() => sortProducts('createTime')}>Create At {sortColumn === 'createTime' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</TableHead>
-                                   <TableHead></TableHead>
+                                   <TableHead>Detail</TableHead>
                                    <TableHead>
                                         <Checkbox checked={selectAll} onCheckedChange={handleSelectAll}></Checkbox>
                                    </TableHead>
@@ -249,23 +339,7 @@ export default function Product() {
                                         <TableCell>{convertUtcToLocal(item.createTime)}</TableCell>
                                         {/* edit item */}
                                         <TableCell>
-                                             <Dialog>
-                                                  <DialogTrigger asChild>
-                                                       <Button variant="outline" size="sm">
-                                                            EDIT
-                                                       </Button>
-                                                  </DialogTrigger>
-                                                  <DialogContent>
-                                                       <DialogHeader>
-                                                            <DialogTitle>Edit Product</DialogTitle>
-                                                            <DialogDescription id="dialog-description">Modify product details below.</DialogDescription>
-                                                       </DialogHeader>
-
-                                                       <DialogFooter>
-                                                            <Button type="submit">Save changes</Button>
-                                                       </DialogFooter>
-                                                  </DialogContent>
-                                             </Dialog>
+                                             <EditItemDialog productId={item.id} productName={item.name} parentId={item.parentId} icon={item.icon} onUpdateEditItem={handleUpdateEditItem} />
                                         </TableCell>
                                         <TableCell>
                                              <Checkbox checked={selectedRows.includes(item.id)} onCheckedChange={() => handleRowSelect(item.id)} />
