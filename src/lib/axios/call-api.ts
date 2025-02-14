@@ -7,6 +7,20 @@ type LoginType = {
      role?: string
 }
 
+type updateDataType = {
+     productId: number
+     productName: string
+     parentId: string
+     icon: string
+}
+
+type AddProductType = {
+     productName: string
+     parentId: number
+     icon: string
+     describe: string
+}
+
 export type ProductsType = {
      id: number
      name: string
@@ -62,10 +76,27 @@ export class CallApi {
      }
 
      public static async updateProductDescribe(productId: number, data: string[]) {
-          try {
-               return await AxiosClient.getInstance().post('v1/update/product/describe', { productId: productId, describe: JSON.stringify(data) })
-          } catch (err) {
-               return err
-          }
+          return await AxiosClient.getInstance().post('v1/update/product/describe', { productId: productId, describe: JSON.stringify(data) })
+     }
+
+     public static async updateProductDetail(data: updateDataType) {
+          return await AxiosClient.getInstance().post('v1/update/product/detail', data)
+     }
+
+     public static async updateProductStatus(productId: number[], status: number) {
+          return await AxiosClient.getInstance().post('v1/update/product/status', { productId: productId, status: status })
+     }
+
+     public static async deleteProduct(productId: number[]) {
+          return await AxiosClient.getInstance().post('v1/delete/product', { productId: productId })
+     }
+
+     public static async addProduct(product: AddProductType) {
+          const res = await AxiosClient.getInstance().post('v1/add/product', product)
+          return res.data
+     }
+
+     public static async updateProductParentId(originalId: number, newId: number) {
+          return await AxiosClient.getInstance().post('v1/update/product/parentId', { originalParentId: originalId, newParentId: newId })
      }
 }
