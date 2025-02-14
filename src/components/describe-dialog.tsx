@@ -41,11 +41,12 @@ export const DescribeDialog = ({ describe, productId, onUpdateDescribe }: Descri
                }
           })
 
-          console.log('Updated Descriptions:', updatedDescriptions)
-          await CallApi.updateProductDescribe(productId, updatedDescriptions)
+          try {
+               await CallApi.updateProductDescribe(productId, updatedDescriptions)
 
-          onUpdateDescribe(productId, updatedDescriptions)
-          setOpen(false)
+               onUpdateDescribe(productId, updatedDescriptions)
+               setOpen(false)
+          } catch (err) {}
      }
 
      const handleRemove = (index: number) => {

@@ -26,7 +26,7 @@ export const DateRangePicker: React.FC<DateRangePickerType> = ({ startDate, endD
                          <Calendar mode="single" selected={startDate || undefined} onSelect={(date) => onStartDateChange(date ?? null)} initialFocus />
                     </PopoverContent>
                </Popover>
-               <span className="pt-2">to</span>
+               <span>to</span>
                <Popover>
                     <PopoverTrigger asChild>
                          <Button variant="outline" className="w-[200px] justify-start text-left font-normal">
