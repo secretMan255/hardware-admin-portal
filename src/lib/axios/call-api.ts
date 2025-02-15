@@ -32,6 +32,29 @@ export type ProductsType = {
      err?: string
 }
 
+export type ItemsType = {
+     id: number
+     name: string
+     describe: string
+     price: number
+     qty: number
+     img: string
+     parentId: string
+     shippingFee: number
+     status: number
+     createTime: string
+     err?: string
+}
+
+export type UpdateItemDetail = {
+     itemId: number
+     itemName: string
+     itemParentId: number
+     itemPrice: number
+     itemQty: number
+     itemImg: string
+}
+
 export class CallApi {
      private static Instance: CallApi
 
@@ -98,5 +121,18 @@ export class CallApi {
 
      public static async updateProductParentId(originalId: number, newId: number) {
           return await AxiosClient.getInstance().post('v1/update/product/parentId', { originalParentId: originalId, newParentId: newId })
+     }
+
+     public static async getItems() {
+          try {
+               const response: AxiosResponse<ItemsType[]> = await AxiosClient.getInstance().get('v1/items')
+               return response.data
+          } catch (err) {
+               return []
+          }
+     }
+
+     public static async updateItemDetail(data: UpdateItemDetail) {
+          return await AxiosClient.getInstance().post('v1/update/item/detail', data)
      }
 }
