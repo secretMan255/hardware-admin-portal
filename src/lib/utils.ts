@@ -18,3 +18,7 @@ export function convertStatus(status: number): string {
 export function convertUtcToLocal(utcDatetime: string) {
      return moment.utc(utcDatetime).local().format('YYYY-MM-DD')
 }
+
+export function getImage(image: string) {
+     return `https://storage.googleapis.com/veryhardware/${image}.jpeg`
+}
