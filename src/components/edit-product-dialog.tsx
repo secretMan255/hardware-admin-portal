@@ -53,7 +53,7 @@ export const EditItemDialog = ({ productId, productName, parentId, icon, onUpdat
                          </Label>
 
                          <Label htmlFor="parentId">
-                              Parent ID <Input className="flex-1 mb-5" id="parentId" name="parentId" defaultValue={parentId} type="number" />
+                              Parent ID <Input className="flex-1 mb-5" id="parentId" name="parentId" defaultValue={parentId} type="number" min="0" />
                          </Label>
 
                          <Label htmlFor="icon">
