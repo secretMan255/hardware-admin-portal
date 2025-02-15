@@ -35,6 +35,12 @@ const data = {
                icon: SquareTerminal,
                isActive: true,
           },
+          {
+               title: 'Item',
+               url: '/item',
+               icon: SquareTerminal,
+               isActive: true,
+          },
      ],
 }
 
