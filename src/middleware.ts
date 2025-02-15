@@ -15,7 +15,7 @@ export function middleware(request: NextRequest) {
      }
 
      // Routes that require authentication
-     const protectedRoutes = ['/product', '/']
+     const protectedRoutes = ['/product', '/item', '/']
      if (!authToken && protectedRoutes.some((route) => pathname.startsWith(route))) {
           //      // If not authenticated and trying to access a protected route, redirect to /signin
           if (pathname !== '/login') {
