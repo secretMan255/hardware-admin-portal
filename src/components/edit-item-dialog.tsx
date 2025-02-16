@@ -65,7 +65,7 @@ export const EditItemDialog = ({ id, name, parentId, qty, price, img, onUpdateEd
                          <Label htmlFor="price" className="block mb-2">
                               Price
                          </Label>
-                         <Input className="flex-1" id="price" name="price" defaultValue={price} type="number" min="0" required />
+                         <Input className="flex-1" id="price" name="price" defaultValue={price} type="number" min="0" step="0.01" required />
 
                          <Label htmlFor="qty" className="block mb-2">
                               Quantity
