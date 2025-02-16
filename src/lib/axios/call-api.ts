@@ -21,6 +21,15 @@ type AddProductType = {
      describe: string
 }
 
+type AddItemType = {
+     itemName: string
+     parentId: number
+     quantity: number
+     price: number
+     image: string
+     describe: string
+}
+
 export type ProductsType = {
      id: number
      name: string
@@ -110,8 +119,16 @@ export class CallApi {
           return await AxiosClient.getInstance().post('v1/update/product/status', { productId: productId, status: status })
      }
 
+     public static async updateItemStatus(itemId: number[], status: number) {
+          return await AxiosClient.getInstance().post('v1/update/item/status', { itemId: itemId, status: status })
+     }
+
      public static async deleteProduct(productId: number[]) {
           return await AxiosClient.getInstance().post('v1/delete/product', { productId: productId })
+     }
+
+     public static async deleteItem(itemId: number[]) {
+          return await AxiosClient.getInstance().post('v1/delete/item', { itemId: itemId })
      }
 
      public static async addProduct(product: AddProductType) {
@@ -119,8 +136,17 @@ export class CallApi {
           return res.data
      }
 
+     public static async addItem(item: AddItemType) {
+          const res = await AxiosClient.getInstance().post('v1/add/item', item)
+          return res.data
+     }
+
      public static async updateProductParentId(originalId: number, newId: number) {
           return await AxiosClient.getInstance().post('v1/update/product/parentId', { originalParentId: originalId, newParentId: newId })
+     }
+
+     public static async updateItemParentId(originalId: number, newId: number) {
+          return await AxiosClient.getInstance().post('v1/update/item/parentId', { originalParentId: originalId, newParentId: newId })
      }
 
      public static async getItems() {
@@ -134,5 +160,9 @@ export class CallApi {
 
      public static async updateItemDetail(data: UpdateItemDetail) {
           return await AxiosClient.getInstance().post('v1/update/item/detail', data)
+     }
+
+     public static async updateItemDescribe(data: any) {
+          return await AxiosClient.getInstance().post('v1/update/item/describe', data)
      }
 }
