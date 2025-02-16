@@ -1,18 +1,18 @@
 'use client'
-import { AddProductDialog } from '@/components/add-product'
 import { DateRangePicker } from '@/components/date-picker'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from '@/components/ui/table'
-import { UpdateParentId } from '@/components/update-product-parentId'
+import { UpdateParentId } from '@/components/update-item-parentId'
 import { CallApi, ItemsType } from '@/lib/axios/call-api'
 import { convertStatus, convertUtcToLocal } from '@/lib/utils'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useState, useEffect } from 'react'
 import React from 'react'
-import { EditItemDialog } from '@/components/eidt-item-dialog'
+import { EditItemDialog } from '@/components/edit-item-dialog'
 import { ItemDescribeDialog } from '@/components/item-describe.dialog'
+import { AddItemDialog } from '@/components/add-item'
 
 enum ItemStatus {
      ACTIVE = 1,
@@ -85,6 +85,27 @@ export default function Item() {
           setItemList((prevList) => prevList.map((product) => (Number(product.parentId) === Number(originalParentId) ? { ...product, parentId: newParentId } : product)))
      }
 
+     const handleUpdateItemDesceibe = (id: number, itemDescribe: string) => {
+          setItemList((prevList) => prevList.map((item) => (item.id === id ? { ...item, describe: itemDescribe } : item)))
+     }
+
+     const handleAddItem = (itemId: number, itemName: string, parentId: string, quantity: number, price: number, image: string, describe: string) => {
+          const newItem: ItemsType = {
+               id: itemId,
+               name: itemName,
+               parentId: parentId,
+               qty: quantity,
+               price: price,
+               img: image,
+               describe: describe,
+               shippingFee: 0,
+               status: ItemStatus.ACTIVE, // Default status for new items
+               createTime: new Date().toISOString(), // Current time
+          }
+
+          setItemList((prevList) => [...prevList, newItem])
+     }
+
      // search product
      function searchItem() {
           setCurrentPage(1)
@@ -130,9 +151,9 @@ export default function Item() {
      async function updateItemStatus(status: number) {
           try {
                if (selectedRows.length === 0) return
-               await CallApi.updateProductStatus(selectedRows, status)
+               await CallApi.updateItemStatus(selectedRows, status)
 
-               setItemList((prevList) => prevList.map((product) => (selectedRows.includes(product.id) ? { ...product, status } : product)))
+               setItemList((prevList) => prevList.map((item) => (selectedRows.includes(item.id) ? { ...item, status } : item)))
 
                setSelectedRows([])
           } catch (err) {}
@@ -180,7 +201,7 @@ export default function Item() {
      async function deleteItem() {
           try {
                if (selectedRows.length === 0) return
-               await CallApi.deleteProduct(selectedRows)
+               await CallApi.deleteItem(selectedRows)
 
                setItemList((prevList) => prevList.filter((product) => !selectedRows.includes(product.id)))
 
@@ -241,7 +262,7 @@ export default function Item() {
                <div className="flex  justify-between items-center py-4">
                     <div className="flex gap-2">
                          {/* <Button variant="outline">ADD</Button> */}
-                         {/* <AddProductDialog productNames={itemList.map((product) => product.name)} onAddProduct={handleUpdateItem} /> */}
+                         <AddItemDialog itemNames={itemList.map((item) => item.name)} onAddItem={handleAddItem} />
                          <Button variant="outline" onClick={() => deleteItem()}>
                               DELETE
                          </Button>
@@ -321,7 +342,7 @@ export default function Item() {
                                              {/* <img src={getImage(item.img)} alt="Item" className="w-10 h-10 object-cover" /> */}
                                         </TableCell>
                                         <TableCell>
-                                             <ItemDescribeDialog id={item.id} describe={item.describe} />
+                                             <ItemDescribeDialog id={item.id} describe={item.describe} onUpdateItemDescribe={handleUpdateItemDesceibe} />
                                         </TableCell>
                                         <TableCell>{convertStatus(Number(item.status))}</TableCell>
                                         <TableCell>{convertUtcToLocal(item.createTime)}</TableCell>
@@ -346,7 +367,7 @@ export default function Item() {
                </div>
 
                {/* Pagination */}
-               <div className="flex items-center gap-2">
+               <div className="flex items-center justify-end space-x-2 py-4">
                     <Button variant="outline" size="sm" onClick={() => setCurrentPage((old) => Math.max(old - 1, 1))} disabled={currentPage === 1}>
                          Previous
                     </Button>
