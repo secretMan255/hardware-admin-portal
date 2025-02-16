@@ -40,10 +40,10 @@ export const EditItemDialog = ({ productId, productName, parentId, icon, onUpdat
                          EDIT
                     </Button>
                </DialogTrigger>
-               <DialogContent>
+               <DialogContent aria-describedby={'descriptionId'}>
                     <DialogHeader>
                          <DialogTitle>Product Details</DialogTitle>
-                         <DialogDescription id="dialog-description">Modify product details below</DialogDescription>
+                         <DialogDescription>Modify product details below</DialogDescription>
                     </DialogHeader>
 
                     <form onSubmit={handleSubmit} className="space-y-4">

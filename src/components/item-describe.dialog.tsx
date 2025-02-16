@@ -88,7 +88,7 @@ export const ItemDescribeDialog = ({ id, describe, onUpdateItemDescribe }: EditI
                          EDIT
                     </Button>
                </DialogTrigger>
-               <DialogContent>
+               <DialogContent aria-describedby={'descriptionId'}>
                     <DialogHeader>
                          <DialogTitle>Item Details</DialogTitle>
                          <DialogDescription>Modify item details below</DialogDescription>

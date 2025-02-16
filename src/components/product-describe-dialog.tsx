@@ -64,10 +64,10 @@ export const DescribeDialog = ({ describe, productId, onUpdateDescribe }: Descri
                          EDIT
                     </Button>
                </DialogTrigger>
-               <DialogContent>
+               <DialogContent aria-describedby={descriptions.length > 0 ? 'descriptionId' : undefined}>
                     <DialogHeader>
                          <DialogTitle>Product Describe</DialogTitle>
-                         <DialogDescription id="dialog-description">Modify product describe below</DialogDescription>
+                         <DialogDescription id="descriptionId">Modify product describe below</DialogDescription>
                     </DialogHeader>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
