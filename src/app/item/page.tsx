@@ -145,7 +145,15 @@ export default function Item() {
      const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem)
 
      // reset filter
-     function clearFilter() {}
+     function clearFilter() {
+          setCurrentPage(1)
+          setsearchItemByName('')
+          setItemStatus('2')
+          setParentId('')
+          setStartDate(null)
+          setEndDate(null)
+          setFilteredItems(itemList)
+     }
 
      // update product status
      async function updateItemStatus(status: number) {
