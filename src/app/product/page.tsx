@@ -10,10 +10,10 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { convertStatus, convertUtcToLocal } from '@/lib/utils'
 import { CallApi, ProductsType } from '@/lib/axios/call-api'
 import React from 'react'
-import { DescribeDialog } from '@/components/product-describe-dialog'
-import { EditItemDialog } from '@/components/edit-product-dialog'
-import { AddProductDialog } from '@/components/add-product'
-import { UpdateParentId } from '@/components/update-product-parentId'
+import { DescribeDialog } from '@/components/product/product-describe-dialog'
+import { EditItemDialog } from '@/components/product/edit-product-dialog'
+import { AddProductDialog } from '@/components/product/add-product'
+import { UpdateParentId } from '@/components/product/update-product-parentId'
 
 enum ProductStatus {
      ACTIVE = 1,

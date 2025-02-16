@@ -5,9 +5,9 @@ import { useMediaQuery } from '@/lib/use-media-query'
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { GalleryVerticalEnd, SquareTerminal } from 'lucide-react'
 
-import { NavMain } from '@/components/nav-main'
-import { NavFooter } from '@/components/nav-footer'
-import { NavHead } from '@/components/nav-header'
+import { NavMain } from '@/components/sidebar/nav-main'
+import { NavFooter } from '@/components/sidebar/nav-footer'
+import { NavHead } from '@/components/sidebar/nav-header'
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@/components/ui/sidebar'
 
 // This is sample data.
@@ -42,8 +42,8 @@ const data = {
                isActive: true,
           },
           {
-               title: 'Image',
-               url: '/image',
+               title: 'Carousel',
+               url: '/carousel',
                icon: SquareTerminal,
                isActive: true,
           },

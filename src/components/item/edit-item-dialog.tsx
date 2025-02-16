@@ -1,6 +1,6 @@
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
 import { CallApi } from '@/lib/axios/call-api'
 import { Label } from '@/components/ui/label'
 import { useState } from 'react'

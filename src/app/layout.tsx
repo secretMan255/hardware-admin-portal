@@ -4,7 +4,7 @@ import './globals.css'
 import React from 'react'
 import { usePathname } from 'next/navigation'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
-import { AppSidebar } from '@/components/app-sidebar'
+import { AppSidebar } from '@/components/sidebar/app-sidebar'
 import { useMediaQuery } from '@/lib/use-media-query'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

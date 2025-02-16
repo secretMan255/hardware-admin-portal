@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { X, Plus } from 'lucide-react'
-import { Button } from './ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
-import { Input } from './ui/input'
-import { Label } from './ui/label'
+import { Button } from '../ui/button'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
+import { Input } from '../ui/input'
+import { Label } from '../ui/label'
 import { CallApi } from '@/lib/axios/call-api'
 
 type AddItemDialogType = {
