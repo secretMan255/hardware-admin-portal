@@ -181,7 +181,7 @@ export default function Item() {
                     valueB = valueB.toLowerCase()
                }
 
-               if (column === 'parentId' || column === 'status' || column === 'id') {
+               if (column === 'parentId' || column === 'status' || column === 'id' || column === 'price') {
                     valueA = Number(valueA)
                     valueB = Number(valueB)
                }
@@ -322,15 +322,15 @@ export default function Item() {
                     <Table>
                          <TableHeader>
                               <TableRow>
-                                   <TableHead>ID</TableHead>
-                                   <TableHead>Item Name</TableHead>
-                                   <TableHead>Parent ID</TableHead>
+                                   <TableHead onClick={() => sortProducts('id')}>ID {sortColumn === 'id' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</TableHead>
+                                   <TableHead onClick={() => sortProducts('name')}>Item Name {sortColumn === 'name' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</TableHead>
+                                   <TableHead onClick={() => sortProducts('parentId')}>Parent ID {sortColumn === 'parentId' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</TableHead>
                                    <TableHead>Quantity</TableHead>
-                                   <TableHead>Price</TableHead>
+                                   <TableHead onClick={() => sortProducts('price')}>Price {sortColumn === 'price' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</TableHead>
                                    <TableHead>Image</TableHead>
                                    <TableHead>Description</TableHead>
-                                   <TableHead>Status</TableHead>
-                                   <TableHead>Create At</TableHead>
+                                   <TableHead onClick={() => sortProducts('status')}>Status {sortColumn === 'status' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</TableHead>
+                                   <TableHead onClick={() => sortProducts('createTime')}>Create At {sortColumn === 'createTime' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</TableHead>
                                    <TableHead>Detail</TableHead>
                                    <TableHead>
                                         <Checkbox checked={selectAll} onCheckedChange={handleSelectAll}></Checkbox>
