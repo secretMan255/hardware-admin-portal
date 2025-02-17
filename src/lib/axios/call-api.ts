@@ -41,6 +41,17 @@ export type ProductsType = {
      err?: string
 }
 
+export type CarouselType = {
+     id: number
+     name: string
+     parentId: number
+}
+
+export type AddCarouselType = {
+     name: string
+     parentId: number
+}
+
 export type ItemsType = {
      id: number
      name: string
@@ -131,6 +142,10 @@ export class CallApi {
           return await AxiosClient.getInstance().post('v1/delete/item', { itemId: itemId })
      }
 
+     public static async deleteCarousel(id: number[]) {
+          return await AxiosClient.getInstance().post('v1/delete/carousel', { id: id })
+     }
+
      public static async addProduct(product: AddProductType) {
           const res = await AxiosClient.getInstance().post('v1/add/product', product)
           return res.data
@@ -164,5 +179,28 @@ export class CallApi {
 
      public static async updateItemDescribe(data: any) {
           return await AxiosClient.getInstance().post('v1/update/item/describe', data)
+     }
+
+     public static async updateCarousel(data: CarouselType) {
+          return await AxiosClient.getInstance().post('v1/update/carousel', data)
+     }
+
+     public static async getCarousel() {
+          try {
+               const response: AxiosResponse<CarouselType[]> = await AxiosClient.getInstance().get('v1/carousel/image')
+               return response.data
+          } catch (err) {
+               console.error('Get carousel image list failed:', err)
+               return []
+          }
+     }
+
+     public static async addCarousel(data: AddCarouselType) {
+          const res = await AxiosClient.getInstance().post('v1/add/carousel', data)
+          return res.data
+     }
+
+     public static async updateCarouselParentId(orginId: number, newId: number) {
+          return await AxiosClient.getInstance().post('v1/update/carousel/parentid', { originalParentId: orginId, newParentId: newId })
      }
 }
