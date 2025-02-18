@@ -47,6 +47,12 @@ const data = {
                icon: SquareTerminal,
                isActive: true,
           },
+          {
+               title: 'Main Product',
+               url: '/mainproduct',
+               icon: SquareTerminal,
+               isActive: true,
+          },
      ],
 }
 

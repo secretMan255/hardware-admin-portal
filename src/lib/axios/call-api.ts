@@ -47,6 +47,18 @@ export type CarouselType = {
      parentId: number
 }
 
+export type MainProductType = {
+     mainProducts: {
+          id: number
+          name?: string
+          parentId: number
+     }[]
+     availableProducts: {
+          id: number
+          name?: string
+     }[]
+}
+
 export type AddCarouselType = {
      name: string
      parentId: number
@@ -202,5 +214,24 @@ export class CallApi {
 
      public static async updateCarouselParentId(orginId: number, newId: number) {
           return await AxiosClient.getInstance().post('v1/update/carousel/parentid', { originalParentId: orginId, newParentId: newId })
+     }
+
+     public static async getMainProduct() {
+          try {
+               const response: AxiosResponse<MainProductType[]> = await AxiosClient.getInstance().get('v1/main/product')
+               // return { availableProducts: response.data.availableProducts, mainProducts: response.data.mainProducts }
+               return response.data
+          } catch (err) {
+               return []
+          }
+     }
+
+     public static async deleteMainProduct(id: number[]) {
+          return await AxiosClient.getInstance().post('v1/delete/main/product', { id: id })
+     }
+
+     public static async addMainProduct(id: number) {
+          const res = await AxiosClient.getInstance().post('v1/add/main/product', { id: id })
+          return res.data
      }
 }
