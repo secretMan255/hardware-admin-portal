@@ -87,6 +87,10 @@ export type UpdateItemDetail = {
      itemImg: string
 }
 
+export type CloudFile = {
+     files: string[]
+}
+
 export class CallApi {
      private static Instance: CallApi
 
@@ -233,5 +237,28 @@ export class CallApi {
      public static async addMainProduct(id: number) {
           const res = await AxiosClient.getInstance().post('v1/add/main/product', { id: id })
           return res.data
+     }
+
+     public static async getCloudFiles() {
+          try {
+               const response: AxiosResponse<CloudFile> = await AxiosClient.getInstance().get('v1/cloud/storage')
+               return response.data
+          } catch (err) {
+               return []
+          }
+     }
+
+     public static async deleteImage(files: string[]) {
+          const res = await AxiosClient.getInstance().post('v1/delete/cloud/file', { fileName: files })
+          return res.data
+     }
+
+     public static async uploadImage(fileName: string, hexString: string) {
+          const payload = {
+               fileName: fileName,
+               fileData: hexString,
+          }
+
+          return await AxiosClient.getInstance().post('/v1/upload/cloud/file', payload)
      }
 }
