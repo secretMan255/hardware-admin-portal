@@ -24,10 +24,6 @@ export default function carousel() {
      const [selectedRows, setSelectedRows] = useState<number[]>([])
      const [selectAll, setSelectAll] = useState(false)
 
-     // sort table by header
-     const [sortColumn, setSortColumn] = useState<string | null>(null)
-     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
-
      useEffect(() => {
           async function fetchItems() {
                try {
