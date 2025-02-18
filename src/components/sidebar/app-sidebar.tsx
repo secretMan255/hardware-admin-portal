@@ -53,6 +53,12 @@ const data = {
                icon: SquareTerminal,
                isActive: true,
           },
+          {
+               title: 'Image',
+               url: '/image',
+               icon: SquareTerminal,
+               isActive: true,
+          },
      ],
 }
 
