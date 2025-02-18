@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 export function middleware(request: NextRequest) {
      const authToken = request.cookies.get('authToken')?.value // Retrieve the auth token from cookies
      const pathname = request.nextUrl.pathname
-     console.log('nihao')
+
      // Routes that require authentication
      const protectedRoutes = ['/', '/product', '/carousel', '/item', '/image']
 
