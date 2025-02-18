@@ -5,7 +5,7 @@ export function middleware(request: NextRequest) {
      const pathname = request.nextUrl.pathname
      console.log('nihao')
      // Routes that require authentication
-     const protectedRoutes = ['/', '/product']
+     const protectedRoutes = ['/', '/product', '/carousel', '/item', '/image']
 
      if (!authToken && protectedRoutes.some((route) => pathname.startsWith(route))) {
           // If not authenticated and trying to access a protected route, redirect to /signin

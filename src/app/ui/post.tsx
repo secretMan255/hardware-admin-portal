@@ -13,6 +13,7 @@ async function getPosts(): Promise<Post[]> {
           { slug: 'item-post', title: 'Item' },
           { slug: 'carousel-post', title: 'Carousel' },
           { slug: 'mainproduct-post', title: 'Main Product' },
+          { slug: 'image-post', title: 'Image' },
      ]
 }
 
