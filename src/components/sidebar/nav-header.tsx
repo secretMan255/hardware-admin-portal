@@ -1,10 +1,8 @@
 'use client'
 
 import * as React from 'react'
-import { ChevronsUpDown, Plus } from 'lucide-react'
-
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar'
+import { SidebarMenuButton } from '@/components/ui/sidebar'
+import Link from 'next/link'
 
 export function NavHead({
      teams,
@@ -23,9 +21,9 @@ export function NavHead({
                     <activeTeam.logo className="size-4" />
                </div>
                <div className="grid flex-1 text-left text-sm leading-tight">
-                    <a href="/">
+                    <Link href="/">
                          <span className="truncate font-semibold">{activeTeam.name}</span>
-                    </a>
+                    </Link>
                </div>
           </SidebarMenuButton>
      )
