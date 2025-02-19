@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { cookies } from 'next/headers'
 
-export function middleware(request: NextRequest) {
-     const authToken = request.cookies.get('authToken')?.value
+export async function middleware(request: NextRequest) {
+     // Use `cookies()` for Next.js 13+ middleware
+     const authToken = (await cookies()).get('authToken')?.value
      const pathname = request.nextUrl.pathname
+
      console.log('Request Cookies:', request.headers.get('cookie'))
      console.log('authToken: ', authToken, 'pathname: ', pathname)
+
      // Allow static files, API requests, and public assets
      if (
           pathname.startsWith('/_next/') || // Next.js static files
@@ -18,7 +22,7 @@ export function middleware(request: NextRequest) {
      // Routes that require authentication
      const protectedRoutes = ['/product', '/item', '/']
      if (!authToken && protectedRoutes.some((route) => pathname.startsWith(route))) {
-          //      // If not authenticated and trying to access a protected route, redirect to /signin
+          // If not authenticated and trying to access a protected route, redirect to /login
           if (pathname !== '/login') {
                const signInUrl = new URL('/login', request.url)
                return NextResponse.redirect(signInUrl)
