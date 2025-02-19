@@ -11,7 +11,7 @@ import { UpdateCarouselParentId } from '@/components/carousel/update-carousel-pa
 import { EditCarouselDialog } from '@/components/carousel/edit-carousel-dialog'
 import { AddCarousel } from '@/components/carousel/add-carousel-dialog'
 
-export default function carousel() {
+export default function Carousel() {
      // set items
      const [itemList, setItemList] = useState<CarouselType[]>([])
      const [loading, setLoading] = useState<boolean>(true)
