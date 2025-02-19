@@ -222,7 +222,7 @@ export class CallApi {
 
      public static async getMainProduct() {
           try {
-               const response: AxiosResponse<MainProductType[]> = await AxiosClient.getInstance().get('v1/main/product')
+               const response: any /*AxiosResponse<MainProductType[]>*/ = await AxiosClient.getInstance().get('v1/main/product')
                // return { availableProducts: response.data.availableProducts, mainProducts: response.data.mainProducts }
                return response.data
           } catch (err) {
@@ -241,7 +241,7 @@ export class CallApi {
 
      public static async getCloudFiles() {
           try {
-               const response: AxiosResponse<CloudFile> = await AxiosClient.getInstance().get('v1/cloud/storage')
+               const response: any = await AxiosClient.getInstance().get('v1/cloud/storage')
                return response.data
           } catch (err) {
                return []

@@ -68,7 +68,7 @@ export default function carousel() {
                return
           }
 
-          const mainProductId: number = await CallApi.addMainProduct(selectedProduct.id)
+          const mainProductId: any = await CallApi.addMainProduct(selectedProduct.id)
 
           if (!mainProductId[0]?.id) {
                return
