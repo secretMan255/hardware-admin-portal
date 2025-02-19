@@ -3,7 +3,8 @@ import { NextRequest, NextResponse } from 'next/server'
 export function middleware(request: NextRequest) {
      const authToken = request.cookies.get('authToken')?.value
      const pathname = request.nextUrl.pathname
-
+     console.log('Request Cookies:', request.headers.get('cookie'))
+     console.log('authToken: ', authToken, 'pathname: ', pathname)
      // Allow static files, API requests, and public assets
      if (
           pathname.startsWith('/_next/') || // Next.js static files
