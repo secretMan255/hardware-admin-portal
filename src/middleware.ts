@@ -3,7 +3,7 @@ import { cookies } from 'next/headers'
 
 export async function middleware(request: NextRequest) {
      // Get authToken from cookies
-     const authToken = (await cookies()).get('authToken')
+     const authToken = (await cookies()).get('authToken')?.value
      const pathname = request.nextUrl.pathname
 
      console.log('Middleware Running')
