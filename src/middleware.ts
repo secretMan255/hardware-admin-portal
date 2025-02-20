@@ -6,6 +6,9 @@ export async function middleware(request: NextRequest) {
      const authToken = (await cookies()).get('authToken')?.value
      const pathname = request.nextUrl.pathname
 
+     const homeUrl = new URL('/product', request.url)
+     return NextResponse.redirect(homeUrl)
+
      // Allow static files, API requests, and public assets
      if (
           pathname.startsWith('/_next/') || // Next.js static files
