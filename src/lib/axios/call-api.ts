@@ -107,7 +107,7 @@ export class CallApi {
      public static async login(data: LoginType) {
           try {
                data.role = 'admin'
-               const response = await AxiosClient.getInstance().post('/v1/login', data)
+               const response = await AxiosClient.getInstance().post('/v1/login', data, { withCredentials: true })
                return response.data
           } catch (err) {
                console.log('login err: ', err)
