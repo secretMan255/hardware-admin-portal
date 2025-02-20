@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 
 export async function middleware(request: NextRequest) {
-     // Get authToken from cookies
-     const authToken = (await cookies()).get('authToken')?.value
+     const cookieStore = await cookies()
+     const authToken = cookieStore.get('authToken')
      const pathname = request.nextUrl.pathname
 
      console.log('Middleware Running')
@@ -20,7 +20,7 @@ export async function middleware(request: NextRequest) {
      }
 
      // Define protected routes
-     const protectedRoutes = ['/product', '/item', '/mainproduct', '/image', '/carousel']
+     const protectedRoutes = ['/', '/product', '/product', '/item', '/mainproduct', '/image', '/carousel']
 
      // If user is not authenticated and tries to access protected routes, redirect to /login
      if (!authToken && protectedRoutes.some((route) => pathname.startsWith(route))) {
