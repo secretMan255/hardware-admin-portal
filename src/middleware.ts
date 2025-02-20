@@ -2,12 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 
 export async function middleware(request: NextRequest) {
-     // Use `cookies()` for Next.js 13+ middleware
+     // Get authToken from cookies
      const authToken = (await cookies()).get('authToken')?.value
      const pathname = request.nextUrl.pathname
 
-     const homeUrl = new URL('/product', request.url)
-     return NextResponse.redirect(homeUrl)
+     console.log('Middleware Running')
+     console.log('authToken:', authToken, 'pathname:', pathname)
 
      // Allow static files, API requests, and public assets
      if (
@@ -19,21 +19,25 @@ export async function middleware(request: NextRequest) {
           return NextResponse.next() // Allow these requests
      }
 
-     // Routes that require authentication
-     const protectedRoutes = ['/product', '/item', '/', '/mainproduct', '/image', '/carousel']
+     // Define protected routes
+     const protectedRoutes = ['/product', '/item', '/mainproduct', '/image', '/carousel']
+
+     // If user is not authenticated and tries to access protected routes, redirect to /login
      if (!authToken && protectedRoutes.some((route) => pathname.startsWith(route))) {
-          // If not authenticated and trying to access a protected route, redirect to /login
-          if (pathname !== '/login') {
-               const signInUrl = new URL('/login', request.url)
-               return NextResponse.redirect(signInUrl)
-          }
+          console.log('User not authenticated. Redirecting to /login.')
+          return NextResponse.redirect(new URL('/login', request.url))
      }
 
+     // If user is authenticated and tries to access /login, redirect to a protected route
      if (authToken && pathname === '/login') {
-          // If authenticated and trying to access /signin, redirect to a protected route
-          const homeUrl = new URL('/product', request.url)
-          return NextResponse.redirect(homeUrl)
+          console.log('User already authenticated. Redirecting to /product.')
+          return NextResponse.redirect(new URL('/product', request.url))
      }
 
      return NextResponse.next()
+}
+
+// Apply middleware to all routes
+export const config = {
+     matcher: ['/((?!_next|static|favicon.ico|api).*)'], // Apply to all routes except static files and API
 }
