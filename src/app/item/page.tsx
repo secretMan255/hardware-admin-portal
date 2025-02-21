@@ -14,7 +14,7 @@ import { EditItemDialog } from '@/components/item/edit-item-dialog'
 import { ItemDescribeDialog } from '@/components/item/item-describe.dialog'
 import { AddItemDialog } from '@/components/item/add-item'
 import { useRouter } from 'next/navigation'
-import { checkAuth } from '../api/check-auth/route'
+import { checkAuth } from '@/lib/utils'
 
 enum ItemStatus {
      ACTIVE = 1,
@@ -26,7 +26,7 @@ export default function Item() {
 
      useEffect(() => {
           checkAuth(router)
-     }, [])
+     }, [router])
 
      // set items
      const [itemList, setItemList] = useState<ItemsType[]>([])

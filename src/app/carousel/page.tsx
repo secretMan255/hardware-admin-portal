@@ -11,14 +11,14 @@ import { UpdateCarouselParentId } from '@/components/carousel/update-carousel-pa
 import { EditCarouselDialog } from '@/components/carousel/edit-carousel-dialog'
 import { AddCarousel } from '@/components/carousel/add-carousel-dialog'
 import { useRouter } from 'next/navigation'
-import { checkAuth } from '../api/check-auth/route'
+import { checkAuth } from '@/lib/utils'
 
 export default function Carousel() {
      const router = useRouter()
 
      useEffect(() => {
           checkAuth(router)
-     }, [])
+     }, [router])
 
      // set items
      const [itemList, setItemList] = useState<CarouselType[]>([])

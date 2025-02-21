@@ -13,7 +13,7 @@ import { DescribeDialog } from '@/components/product/product-describe-dialog'
 import { EditItemDialog } from '@/components/product/edit-product-dialog'
 import { AddProductDialog } from '@/components/product/add-product'
 import { UpdateParentId } from '@/components/product/update-product-parentId'
-import { checkAuth } from '../api/check-auth/route'
+import { checkAuth } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
 
 enum ProductStatus {
@@ -26,7 +26,7 @@ export default function Product() {
 
      useEffect(() => {
           checkAuth(router)
-     }, [])
+     }, [router])
 
      // get products
      const [productList, setProductList] = useState<ProductsType[]>([])

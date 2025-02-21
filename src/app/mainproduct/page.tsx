@@ -7,7 +7,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { useState, useEffect } from 'react'
 import React from 'react'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { checkAuth } from '../api/check-auth/route'
+import { checkAuth } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
 
 export default function carousel() {
@@ -15,7 +15,7 @@ export default function carousel() {
 
      useEffect(() => {
           checkAuth(router)
-     }, [])
+     }, [router])
 
      // set items
      const [itemList, setItemList] = useState<MainProductType['mainProducts']>([])

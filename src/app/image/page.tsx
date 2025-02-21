@@ -7,14 +7,14 @@ import { useState, useEffect } from 'react'
 import { Input } from '@/components/ui/input'
 import React from 'react'
 import { useRouter } from 'next/navigation'
-import { checkAuth } from '../api/check-auth/route'
+import { checkAuth } from '@/lib/utils'
 
 export default function CloudStorageTable() {
      const router = useRouter()
 
      useEffect(() => {
           checkAuth(router)
-     }, [])
+     }, [router])
 
      // State to store files
      const [fileList, setFileList] = useState<string[]>([])
