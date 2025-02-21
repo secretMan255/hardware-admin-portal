@@ -29,12 +29,10 @@ export async function checkAuth(router: any) {
           credentials: 'include', // 🔥 Ensure cookies are sent
      })
           .then((res) => {
-               if (!res.ok) {
-                    return { authenticated: false }
-               }
                return res.json()
           })
           .then((data) => {
+               console.log('🔍 Auth Check Response:', data)
                if (!data.authenticated) {
                     router.push('/login') // Redirect if not authenticated
                }
