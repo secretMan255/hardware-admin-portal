@@ -6,9 +6,16 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { useState, useEffect } from 'react'
 import { Input } from '@/components/ui/input'
 import React from 'react'
-import { Bold } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { checkAuth } from '../api/check-auth/route'
 
 export default function CloudStorageTable() {
+     const router = useRouter()
+
+     useEffect(() => {
+          checkAuth(router)
+     }, [])
+
      // State to store files
      const [fileList, setFileList] = useState<string[]>([])
      const [filteredFiles, setFilteredFiles] = useState<string[]>([])

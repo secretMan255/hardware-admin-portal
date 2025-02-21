@@ -13,6 +13,8 @@ import React from 'react'
 import { EditItemDialog } from '@/components/item/edit-item-dialog'
 import { ItemDescribeDialog } from '@/components/item/item-describe.dialog'
 import { AddItemDialog } from '@/components/item/add-item'
+import { useRouter } from 'next/navigation'
+import { checkAuth } from '../api/check-auth/route'
 
 enum ItemStatus {
      ACTIVE = 1,
@@ -20,6 +22,12 @@ enum ItemStatus {
 }
 
 export default function Item() {
+     const router = useRouter()
+
+     useEffect(() => {
+          checkAuth(router)
+     }, [])
+
      // set items
      const [itemList, setItemList] = useState<ItemsType[]>([])
      const [loading, setLoading] = useState<boolean>(true)

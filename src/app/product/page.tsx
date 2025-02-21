@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input'
 import { useState, useEffect } from 'react'
 import { DateRangePicker } from '@/components/date-picker'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Dialog, DialogContent, DialogTitle, DialogTrigger, DialogHeader, DialogFooter, DialogDescription } from '@/components/ui/dialog'
 import { Checkbox } from '@/components/ui/checkbox'
 import { convertStatus, convertUtcToLocal } from '@/lib/utils'
 import { CallApi, ProductsType } from '@/lib/axios/call-api'
@@ -14,6 +13,8 @@ import { DescribeDialog } from '@/components/product/product-describe-dialog'
 import { EditItemDialog } from '@/components/product/edit-product-dialog'
 import { AddProductDialog } from '@/components/product/add-product'
 import { UpdateParentId } from '@/components/product/update-product-parentId'
+import { checkAuth } from '../api/check-auth/route'
+import { useRouter } from 'next/navigation'
 
 enum ProductStatus {
      ACTIVE = 1,
@@ -21,6 +22,12 @@ enum ProductStatus {
 }
 
 export default function Product() {
+     const router = useRouter()
+
+     useEffect(() => {
+          checkAuth(router)
+     }, [])
+
      // get products
      const [productList, setProductList] = useState<ProductsType[]>([])
      const [loading, setLoading] = useState<boolean>(true)

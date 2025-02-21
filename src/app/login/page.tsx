@@ -2,16 +2,22 @@
 
 import { signIn, SignInResult } from '@/app/actions/auth'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { checkAuth } from '../api/check-auth/route'
 
 export default function LoginPage() {
+     const router = useRouter()
+
+     useEffect(() => {
+          checkAuth(router)
+     }, [])
+
      const [errors, setErrors] = useState<SignInResult['errors'] | undefined>(undefined)
      const [isSubmitting, setIsSubmitting] = useState(false)
-     const router = useRouter()
 
      const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
           event.preventDefault()
